@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ProfitProbe – Cross-Functional Profitability Analyst</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f7f5f9;--card:#fff;--tx:#1f1b2a;--mu:#6c6880;--bd:#e7e3ee;--ac:#e0388a;--gn:#1c9a5b;--am:#d98a0b;--rd:#d93a4a;--c1:#7a3fd1;--c2:#2874f0;--c3:#d98a0b;--c4:#1c9a5b}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16121c;--card:#201b29;--tx:#f0ecf6;--mu:#a6a1b9;--bd:#332d42;--ac:#ff72b4;--gn:#4cd08d;--am:#f2b04a;--rd:#ff6b78;--c1:#b48cff;--c2:#6ea1ff;--c3:#f2b04a;--c4:#4cd08d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#16121c;--card:#201b29;--tx:#f0ecf6;--mu:#a6a1b9;--bd:#332d42;--ac:#ff72b4;--gn:#4cd08d;--am:#f2b04a;--rd:#ff6b78;--c1:#b48cff;--c2:#6ea1ff;--c3:#f2b04a;--c4:#4cd08d;color-scheme:dark}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:1100px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:17px;margin:0 0 10px}
+.mu{color:var(--mu)}.sub{margin:0 0 18px}
+.grid{display:grid;gap:14px}.k{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}.two{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:14px}
+.kv{font-size:26px;font-weight:700}.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap}
+.hi{background:var(--rd)}.md{background:var(--am)}.lo{background:var(--gn)}.nz{background:var(--mu)}
+.sc{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--bd);font-size:14px;vertical-align:middle}th{color:var(--mu);font-weight:600}
+ol.al{padding-left:20px;margin:0}ol.al li{margin-bottom:8px}
+button,select,input[type=text]{font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:7px 12px;border-radius:8px}
+button{cursor:pointer}button:hover{border-color:var(--ac)}button.p{background:var(--ac);color:#fff;border-color:var(--ac)}
+.ag{background:color-mix(in srgb,var(--ac) 7%,var(--card));border-radius:10px;padding:12px;margin-top:10px;white-space:pre-wrap;min-height:70px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ch{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.nd{border:2px solid;border-radius:10px;padding:6px 10px;font-size:14px;font-weight:600;background:var(--card)}
+.nd small{display:block;font-weight:400;color:var(--mu);font-size:11px}
+.ar{color:var(--mu);font-size:12px;text-align:center}
+input[type=range]{width:100%}svg{display:block;width:100%;height:auto}code{background:var(--bd);padding:1px 6px;border-radius:4px;font-size:13px}
+</style></head><body><div class="w">
+<h1>🔎 ProfitProbe</h1>
+<p class="mu sub">AI business analyst for a Myntra-style fashion e-commerce company: every department says it is on target, yet profit has fallen three quarters in a row. (Synthetic illustrative data, 24 months to Sep 2026.)</p>
+<div class="grid k" id="kpis"></div>
+<div class="grid two" style="margin-top:14px">
+<div class="c"><h2>Contribution margin by quarter (%)</h2><svg id="qc" viewBox="0 0 520 190"></svg></div>
+<div class="c sc"><h2>What each department reports</h2><table id="sc" style="min-width:0"></table></div></div>
+<div class="c"><h2>Hidden cross-functional chain behind the decline</h2><div class="ch" id="chain"></div><p class="mu" id="chn" style="margin-bottom:0"></p></div>
+<div class="grid two">
+<div class="c sc"><h2>KPI evidence vs margin change</h2><table id="tbl"></table></div>
+<div class="c"><h2>What-if: break the chain</h2>
+<div class="row"><span>Fix at:</span><select id="nd"></select></div>
+<div class="mu" style="margin-top:8px">Reverse <b id="pv">50</b>% of its rise since the decline began</div><input type="range" id="pc" min="0" max="100" value="50"><div id="wi"></div></div></div>
+<div class="c"><h2>Analyst memo (LLM)</h2>
+<div class="row"><button class="p" id="gen">Generate CFO memo</button><span class="mu" style="font-size:13px">The LLM sees only the computed evidence.</span></div>
+<div class="ag" id="brief">Click to generate. Without LLM access the page shows a rule-based summary.</div>
+<div class="row" style="margin-top:12px"><input type="text" id="q" style="flex:1;min-width:200px" placeholder="Ask e.g. Why is HR linked to the profit drop?"><button id="ask">Ask</button></div>
+<div class="ag" id="ans" style="min-height:40px">Answers are grounded in the evidence.</div></div>
+<div class="c"><h2>Algorithm used by the analyst</h2><ol class="al">
+<li><b>Integrate</b> 15 monthly KPIs from Marketing, HR, Operations and Finance with the profit outcome (contribution margin %).</li>
+<li><b>Paradox test</b>: score each department against its own targets (all show as met) and detect the profit decline: trailing quarters with a drop of more than 0.2 pts.</li>
+<li><b>Change-point</b>: split the margin series at the point minimizing within-segment squared error to date the onset.</li>
+<li><b>Detrend</b>: use month-over-month changes, because most KPIs trend and raw correlations are misleading.</li>
+<li><b>Drivers</b>: correlate each KPI change with margin change at lags 0–4; significant if <code>|r| &gt; 2/√n</code>.</li>
+<li><b>Cross-functional graph</b>: draw an edge A→B when A leads B by one month, <code>|r| &gt; 0.7</code> and A→B beats B→A by 0.15 (direction test). Revenue is excluded because it duplicates orders.</li>
+<li><b>Root-cause chain</b>: search all simple paths and keep the one with the strongest total link strength, ending at a KPI that drives margin.</li>
+<li><b>Quantify</b>: estimate each link&rsquo;s slope by OLS and multiply along the chain to get the margin loss mediated by the chain; simulate fixes at any link.</li>
+<li><b>Narrate</b>: the LLM receives the evidence pack and writes a memo that states the chain, the share explained and a validation step.</li></ol></div></div>
+<script>
+const $=i=>document.getElementById(i);
+const n=24,T=[...Array(n).keys()];
+const rn=(t,k)=>{const x=Math.sin(t*12.9898+k*78.233)*43758.5453;return x-Math.floor(x)-.5};
+const D=t=>t<15?0:Math.min(1,(t-14)/6);
+const base=t=>40+.4*t;
+const disc=[],ord=[],ot=[],att=[],pe=[],ret=[],cpo=[],otd=[],conv=[],cac=[],trn=[],fill=[],rev=[],gm=[],cm=[],ref=[],wc=[];
+T.forEach(t=>{const p=Math.max(0,t-1);
+ disc[t]=18+7*D(t)+.5*rn(t,1);
+ ord[t]=base(t)+9*D(t-1)+.6*rn(t,2);
+ ot[t]=6+.35*((t?ord[t-1]-base(t-1):0))+.35*rn(t,3);
+ att[t]=2+.22*(t?ot[t-1]-6:0)+.1*rn(t,4);
+ pe[t]=.8+.55*(t?att[t-1]-2:0)+.04*rn(t,5);
+ ret[t]=14+7.5*(t?pe[t-1]-.8:0)+.35*rn(t,6);
+ cpo[t]=95+1.2*(ot[t]-6)+2*(t?ret[t-1]-14:0)+.8*rn(t,7);
+ otd[t]=94.5+.2*(ot[t]-6)+.25*rn(t,8);
+ conv[t]=3+.6*D(t)+.05*rn(t,9);
+ cac[t]=300+8*rn(t,10);
+ trn[t]=2.0+.01*t+.1*rn(t,11);
+ fill[t]=96+.8*rn(t,12);
+ rev[t]=ord[t]*11;
+ gm[t]=38-.25*(disc[t]-18)+.3*rn(t,13);
+ cm[t]=12.5-.22*(disc[t]-18)-.55*(ret[t]-14)-.04*(cpo[t]-95)+.15*rn(t,14);
+ wc[t]=28+rn(t,15);
+});
+const K=[["Discount depth %","Marketing",disc],["Orders (lakh)","Marketing",ord],["Conversion %","Marketing",conv],["CAC ₹","Marketing",cac],
+["Attrition %","HR",att],["Overtime h/head","HR",ot],["Training spend ₹cr","HR",trn],["Headcount fill %","HR",fill],
+["Pick error %","Operations",pe],["Return rate %","Operations",ret],["Cost per order ₹","Operations",cpo],["On-time delivery %","Operations",otd],
+["Revenue ₹cr","Finance",rev],["Gross margin %","Finance",gm],["Working capital days","Finance",wc]].map(([k,d,s])=>({k,d,s}));
+const df=a=>a.map((v,i)=>i?v-a[i-1]:0);
+const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
+const cor=(a,b)=>{const ma=mean(a),mb=mean(b);let c=0,x=0,y=0;a.forEach((v,i)=>{c+=(v-ma)*(b[i]-mb);x+=(v-ma)**2;y+=(b[i]-mb)**2});return c/Math.sqrt(x*y||1)};
+
+const DC={Marketing:"--c1",HR:"--c2",Operations:"--c3",Finance:"--c4"};
+const QN=["Q3 FY25","Q4 FY25","Q1 FY26","Q2 FY26","Q3 FY26","Q4 FY26","Q1 FY27","Q2 FY27"];
+const MO=["Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"];
+const mname=t=>MO[t%12]+" "+(2024+Math.floor((t+9)/12));
+const sd=a=>{const m=mean(a);return Math.sqrt(mean(a.map(v=>(v-m)**2)))||1};
+const by=Object.fromEntries(K.map(o=>[o.k,o]));
+const slope=(a,b,L)=>{const x=df(a),y=df(b),xs=[],ys=[];for(let t=1+L;t<n;t++){xs.push(x[t-L]);ys.push(y[t])}const mx=mean(xs),my=mean(ys);let c=0,v=0;xs.forEach((u,i)=>{c+=(u-mx)*(ys[i]-my);v+=(u-mx)**2});return c/v};
+function lagcor(a,b,L){const x=df(a),y=df(b),xs=[],ys=[];for(let t=1+L;t<n;t++){xs.push(x[t-L]);ys.push(y[t])}return cor(xs,ys)}
+const A={};
+(function(){
+ // quarters
+ A.q=[...Array(8)].map((_,i)=>{let a=0,b=0;for(let t=3*i;t<3*i+3;t++){a+=rev[t]*cm[t];b+=rev[t]}return a/b});
+ let c=0;for(let i=7;i>0&&A.q[i-1]-A.q[i]>.2;i--)c++;A.dq=c;
+ // changepoint
+ let best=null;for(let s=4;s<n-3;s++){const a=cm.slice(0,s),b=cm.slice(s),sse=a.reduce((t,v)=>t+(v-mean(a))**2,0)+b.reduce((t,v)=>t+(v-mean(b))**2,0);if(!best||sse<best.sse)best={s,sse}}
+ A.on=best.s;
+ // drivers
+ A.R=K.map(o=>{let b=null;for(let L=0;L<=4;L++){const r=lagcor(o.s,cm,L),np=n-1-L;if(!b||Math.abs(r)>Math.abs(b.r))b={r,L,np}}
+  const raw=cor(o.s,cm),sig=Math.abs(b.r)>2/Math.sqrt(b.np);return{...o,...b,raw,sig,verdict:sig?"Driver":Math.abs(raw)>.6?"Spurious trend":"Noise"}});
+ // edges lag1
+ const nodes=K.filter(o=>o.k!="Revenue ₹cr"),E={};
+ nodes.forEach(a=>nodes.forEach(b=>{if(a==b)return;const r=lagcor(a.s,b.s,1),rr=lagcor(b.s,a.s,1);if(Math.abs(r)>.7&&Math.abs(r)>Math.abs(rr)+.15)(E[a.k]=E[a.k]||[]).push({to:b.k,r})}));
+ let bp=null;const Rm=Object.fromEntries(A.R.map(o=>[o.k,o]));
+ function dfs(p,sum,es){const last=p[p.length-1],o=Rm[last];
+  if(p.length>=3&&o.sig){const tot=sum+Math.abs(o.r);if(!bp||tot>bp.tot)bp={p:[...p],es:[...es],tot}}
+  (E[last]||[]).forEach(e=>{if(!p.includes(e.to)&&p.length<8)dfs([...p,e.to],sum+Math.abs(e.r),[...es,e.r])})}
+ nodes.forEach(o=>dfs([o.k],0,[]));
+ A.P=bp;A.sl=bp.p.slice(0,-1).map((k,i)=>slope(by[k].s,by[bp.p[i+1]].s,1));
+ const lk=bp.p[bp.p.length-1];A.last=Rm[lk];A.slc=slope(by[lk].s,cm,A.last.L);
+ const pre=a=>mean(a.slice(0,A.on)),post=a=>mean(a.slice(-3));
+ A.d=bp.p.map(k=>post(by[k].s)-pre(by[k].s));
+ A.eff=i=>A.d[i]*A.sl.slice(i).reduce((a,b)=>a*b,1)*A.slc;
+ A.drop=post(cm)-pre(cm);A.share=A.eff(0)/A.drop;
+})();
+const SCD=[["Marketing","Orders vs plan",t=>ord[t]/base(t)*100,100,"≥100%"],["HR","Headcount fill",t=>fill[t],95,"≥95%"],["Operations","On-time delivery",t=>otd[t],94,"≥94%"],["Finance","Revenue vs plan",t=>rev[t]/(base(t)*11)*100,100,"≥100%"]];
+const qa=(f,i)=>mean([0,1,2].map(j=>f(3*i+j)));
+function render(){
+ $("kpis").innerHTML=[["Margin now",mean(cm.slice(-3)).toFixed(1)+"%"],["Fall vs pre-decline",A.drop.toFixed(1)+" pts"],["Quarters of material decline",A.dq],["Explained by the chain",Math.round(A.share*100)+"%"]].map(k=>`<div class="c" style="margin:0"><div class="mu">${k[0]}</div><div class="kv">${k[1]}</div></div>`).join("");
+ const mx=Math.max(...A.q)*1.08,mn=Math.min(...A.q)*.8;
+ $("qc").innerHTML=A.q.map((v,i)=>{const h=(v-mn)/(mx-mn)*140,x=14+i*63;return `<rect x="${x}" y="${160-h}" width="46" height="${h}" rx="4" fill="${i>=8-A.dq?"var(--rd)":"var(--bd)"}"/><text x="${x+23}" y="${155-h}" font-size="11" text-anchor="middle" fill="var(--tx)">${v.toFixed(1)}</text><text x="${x+23}" y="180" font-size="10" text-anchor="middle" fill="var(--mu)">${QN[i]}</text>`}).join("");
+ $("sc").innerHTML="<tr><th>Dept / KPI</th>"+[4,5,6,7].map(i=>`<th>${QN[i]}</th>`).join("")+"</tr>"+SCD.map(s=>`<tr><td><b style="color:var(${DC[s[0]]})">${s[0]}</b><br><span class="mu">${s[1]} ${s[4]}</span></td>${[4,5,6,7].map(i=>{const v=qa(s[2],i);return `<td><span class="tag ${v>=s[3]?"lo":"hi"}">${v>=s[3]?"Met":"Missed"}</span> <span class="mu">${v.toFixed(0)}</span></td>`}).join("")}</tr>`).join("");
+ const P=A.P;
+ $("chain").innerHTML=P.p.map((k,i)=>`<div class="nd" style="border-color:var(${DC[by[k].d]})">${k}<small>${by[k].d}</small></div><div class="ar">→<br>${i<P.es.length?"r="+P.es[i].toFixed(2)+", 1 mo":"r="+A.last.r.toFixed(2)+", "+A.last.L+" mo"}</div>`).join("")+`<div class="nd" style="border-color:var(--rd)">Contribution margin<small>Finance outcome</small></div>`;
+ $("chn").textContent=`No department owns this loop: it starts in ${by[P.p[0]].d}, passes through ${[...new Set(P.p.map(k=>by[k].d))].slice(1).join(" and ")}, and shows up in Finance. The decline began around ${mname(A.on)}.`;
+ $("tbl").innerHTML="<tr><th>KPI</th><th>Dept</th><th>Raw r</th><th>Change r</th><th>Lag</th><th>Verdict</th></tr>"+[...A.R].sort((a,b)=>Math.abs(b.r)-Math.abs(a.r)).map(o=>`<tr><td>${o.k}</td><td style="color:var(${DC[o.d]})">${o.d}</td><td>${o.raw.toFixed(2)}</td><td>${o.r.toFixed(2)}</td><td>${o.L} mo</td><td><span class="tag ${o.verdict=="Driver"?"lo":o.verdict=="Spurious trend"?"md":"nz"}">${o.verdict}</span></td></tr>`).join("");
+ $("nd").innerHTML=P.p.map((k,i)=>`<option value="${i}">${k}</option>`).join("");
+ whatif()}
+function whatif(){const i=+$("nd").value,p=+$("pc").value/100;$("pv").textContent=Math.round(p*100);
+ const e=-A.eff(i)*p;$("wi").innerHTML=`<p style="font-size:18px;margin:12px 0 4px"><b>+${e.toFixed(2)} pts</b> margin recovery</p><p class="mu" style="margin:0">Chain-mediated estimate from ${by[A.P.p[i]].k} rising ${A.d[i].toFixed(1)} units since onset. Total fall to recover: ${(-A.drop).toFixed(1)} pts; the rest comes from direct discount cost.</p>`}
+$("nd").onchange=whatif;$("pc").oninput=whatif;
+function evidence(){return JSON.stringify({company:"Myntra-style fashion e-commerce (synthetic)",margin_fall_pts:+A.drop.toFixed(2),decline_onset:mname(A.on),quarters_of_decline:A.dq,
+ department_scorecards:"All four departments met their own KPI targets in the last 4 quarters",
+ chain:A.P.p.map((k,i)=>({kpi:k,dept:by[k].d,link_to_next_r:i<A.P.es.length?+A.P.es[i].toFixed(2):+A.last.r.toFixed(2),lag_months:i<A.P.es.length?1:A.last.L,rise_since_onset:+A.d[i].toFixed(2)})),
+ share_of_decline_explained_by_chain:+A.share.toFixed(2),
+ spurious_kpis:A.R.filter(o=>o.verdict=="Spurious trend").map(o=>o.k),noise_kpis:A.R.filter(o=>o.verdict=="Noise").map(o=>o.k),
+ revenue_note:"Revenue growth is rising while margin falls"},null,1)}
+function local(){const P=A.P.p;return `Headline: contribution margin is down ${(-A.drop).toFixed(1)} pts since ${mname(A.on)} even though every department met its own targets.\n\nCross-functional chain: ${P.join(" → ")} → contribution margin.\nThe chain explains about ${Math.round(A.share*100)}% of the fall; the rest is the direct cost of deeper discounts.\n\nActions: cap discount depth, tie campaign volume to warehouse capacity, fix attrition drivers, and add a shared margin KPI for all four departments.\nCaveat: these are correlations; confirm with a controlled promo test.`}
+let smp=null;(async()=>{try{smp=await window.claude.use("sample")}catch(e){smp=null}})();
+async function llm(prompt,box,fb){box.textContent="Thinking…";if(!smp){box.textContent=fb;return}
+ try{const r=await smp(prompt,{onText:({text})=>{box.textContent=text},cache:false});box.textContent=r.text}catch(e){box.textContent=fb+"\n\n(LLM unavailable: showing rule-based summary.)"}}
+$("gen").onclick=()=>llm(`You are a senior business analyst writing to the CFO. Use ONLY this evidence JSON; do not invent numbers.\n${evidence()}\nWrite plain text (no markdown symbols), max 190 words: headline; why every department looked fine while profit fell; the cross-functional chain in plain words with link strengths; the share explained; three recommended actions across departments; one caveat that correlation is not causation plus a validation test.`,$("brief"),local());
+$("ask").onclick=()=>{const q=$("q").value.trim();if(!q)return;llm(`Answer the executive's question using ONLY this evidence JSON. If it cannot answer, say so.\n${evidence()}\nQuestion: ${q}\nUnder 120 words, plain text, cite numbers.`,$("ans"),"See the chain and evidence table above. (LLM not available here.)")};
+render();
+</script></body></html>
